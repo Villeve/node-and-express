@@ -1,0 +1,30 @@
+{
+  "name": "phonebookbackend",
+  "version": "1.0.0",
+  "description": "Part 03 of fullstackopen (https://fullstackopen.com/osa3/node_js_ja_express)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "nodemon index.js",
+    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Villeve/node-and-express.git"
+  },
+  "author": "Villeve",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Villeve/node-and-express/issues"
+  },
+  "homepage": "https://github.com/Villeve/node-and-express#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "morgan": "^1.9.1",
+    "node-uuid": "^1.4.8"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}
