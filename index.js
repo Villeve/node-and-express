@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const uuid = require('node-uuid')
 const cors = require('cors')
+const mongoose = require('mongoose')
 
 morgan.token('body', function getId(req) {
   return JSON.stringify(req.body)
@@ -16,6 +17,18 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.use(cors())
 app.use(express.static('build'))
 
+const url =
+ `mongodb+srv://fullstack:Fullstack2019@cluster0-hvsqc.mongodb.net/phonebook-app?retryWrites=true&w=majority`
+
+ mongoose.connect(url, { useNewUrlParser: true })
+
+ const personSchema = new mongoose.Schema({
+     name: String,
+     number: String
+ })
+
+ const Person = mongoose.model('Person', personSchema)
+
 app.get('/', (req, res) => {
   res.send()
 })
@@ -27,7 +40,9 @@ function assignId (req, res, next) {
 } 
 
 app.get('/api/persons/', (req, res) => {
-  res.json(persons)
+  Person.find({}).then(result => {
+    res.json(result)
+  })
 })
 
 app.get('/info', (req, res) => {
