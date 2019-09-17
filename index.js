@@ -1,3 +1,4 @@
+// EI TEHTY 3.18
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -60,7 +61,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   
   console.log('req body', req.body.name, req.body.number)
   const personToAdd = new Person({
@@ -68,6 +69,13 @@ app.post('/api/persons', (req, res) => {
     number: req.body.number
   })
 
+  personToAdd.save()
+    .then(savedPerson => {
+      res.json(savedPerson.toJSON())
+    })
+    .catch(error => next(error))
+  //res.json(personToAdd)
+  /*
   if(personToAdd.name === '' || personToAdd.number === '') {
     return res.status(400).json({
       error: 'Fill both name and number field'
@@ -94,6 +102,7 @@ app.post('/api/persons', (req, res) => {
     })
     .catch(error => next(error))
   }
+  */
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -131,6 +140,9 @@ const errorHandler = (error, request, response, next) => {
 
   if(error.name === 'CastError' && error.kind == 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
+  }
+  else if(error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)
