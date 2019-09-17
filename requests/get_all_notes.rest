@@ -5,11 +5,11 @@
  //GET http://localhost:3001/info
 
 
- //POST http://localhost:3001/api/persons
- //Content-Type: application/json
+ POST http://localhost:3001/api/persons
+ Content-Type: application/json
 
- //{
-   //  "name": "Pasi",
-    // "number": "123"
- //}
+ {
+     "name": "AB",
+    "number": "321"
+ }
  

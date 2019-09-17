@@ -48,20 +48,72 @@ app.get('/api/persons/', (req, res) => {
 app.get('/info', (req, res) => {
   const currentDate = new Date().toLocaleString()
   res.writeHead(200, { 'Content-Type': 'text/plain' })
-  res.end(`Phonebook has info for ${persons.length} people \n
+  res.end(`Phonebook has info for ${Person.length} people \n
    ${currentDate}`)
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(person => person.id === id)
-  if(person) {
-    res.json(person)
-  }
-  else res.status(404).end()
+  const id = req.params.id
+  Person.find({}).then(result => {
+    result.forEach(result2 => {
+      if(result2.id === id) res.json(result2)
+      else res.status(404).end()
+    })
+  })
+  //mongoose.connections.close()
 })
 
 app.post('/api/persons', (req, res) => {
+  
+  console.log('req body', req.body.name, req.body.number)
+  const personToAdd = new Person({
+    name: req.body.name,
+    number: req.body.number
+  })
+
+  if(personToAdd.name === '' || personToAdd.number === '') {
+    return res.status(400).json({
+      error: 'Fill both name and number field'
+    })
+  }
+  else {
+    Person.find({}).then(result => {
+      let counter = 0
+      result.forEach(result2 => {
+        counter++
+        if(result2.name === personToAdd.name) {
+          console.log('HIT')
+          counter--
+          return res.status(400).json({
+            error: 'Name must be unique'
+          })
+        }
+        if(counter === result.length) {
+          console.log('SAVED')
+          personToAdd.save()
+          res.json(personToAdd)
+        }
+      })
+    })
+    //personToAdd.save()
+  }
+  
+
+    /*
+    result.forEach(result2 => {
+      if(result2.name === personToAdd.name) {
+        return res.status(400).json({
+          error: 'name must be unique'
+        })
+      }
+      else {
+        personToAdd.save()
+      }
+      
+    })
+    */
+  
+/*
   const person = req.body
   const rand = Math.floor(Math.random() * Math.floor(10000000))
   const filteredPersons = persons.filter(pers => pers.name === person.name)
@@ -80,6 +132,7 @@ app.post('/api/persons', (req, res) => {
   persons = persons.concat(person)
 
   res.json(person)
+  */
 })
 
 app.delete('/api/persons/:id', (req, res) => {
