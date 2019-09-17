@@ -1,9 +1,11 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const uuid = require('node-uuid')
 const cors = require('cors')
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
+const Person = require('./models/person')
 
 morgan.token('body', function getId(req) {
   return JSON.stringify(req.body)
@@ -16,10 +18,11 @@ app.use(assignId)
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 app.use(express.static('build'))
-
+/*
 const url =
- `mongodb+srv://fullstack:Fullstack2019@cluster0-hvsqc.mongodb.net/phonebook-app?retryWrites=true&w=majority`
-
+ `mongodb+srv://fullstack:asd@cluster0-hvsqc.mongodb.net/phonebook-app?retryWrites=true&w=majority`
+*/
+ /*
  mongoose.connect(url, { useNewUrlParser: true })
 
  const personSchema = new mongoose.Schema({
@@ -28,7 +31,7 @@ const url =
  })
 
  const Person = mongoose.model('Person', personSchema)
-
+*/
 app.get('/', (req, res) => {
   res.send()
 })
@@ -95,50 +98,23 @@ app.post('/api/persons', (req, res) => {
         }
       })
     })
-    //personToAdd.save()
   }
-  
-
-    /*
-    result.forEach(result2 => {
-      if(result2.name === personToAdd.name) {
-        return res.status(400).json({
-          error: 'name must be unique'
-        })
-      }
-      else {
-        personToAdd.save()
-      }
-      
-    })
-    */
-  
-/*
-  const person = req.body
-  const rand = Math.floor(Math.random() * Math.floor(10000000))
-  const filteredPersons = persons.filter(pers => pers.name === person.name)
-
-  if(filteredPersons.length !== 0) {
-    return res.status(400).json({
-      error: 'name must be unique'
-    })
-  }
-  if(person.name === '' || person.number === '') {
-    return res.status(400).json({
-      error: 'Fill both name and number field'
-    })
-  }
-  person.id = rand
-  persons = persons.concat(person)
-
-  res.json(person)
-  */
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
+  console.log('Starting removal process')
+  console.log('using id', req.params.id)
+  Person.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
+
+  /*
   const id = Number(req.params.id)
   persons = persons.filter(person => person.id !== id)
   res.status(204).end()
+  */
 })
 
 const PORT = process.env.PORT || 3001

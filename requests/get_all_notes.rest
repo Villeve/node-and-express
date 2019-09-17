@@ -1,6 +1,6 @@
 //GET http://localhost:3001/api/persons
 
-//DELETE http://localhost:3001/api/persons/3
+DELETE https://powerful-fjord-13341.herokuapp.com/api/persons/5d80ac10d3440035ae5babbd
  
  //GET http://localhost:3001/info
 
