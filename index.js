@@ -63,6 +63,10 @@ app.get('/api/persons/:id', (req, res) => {
       else res.status(404).end()
     })
   })
+  .catch(error => {
+    console.log(error)
+    res.status(404).end()
+  })
   //mongoose.connections.close()
 })
 
