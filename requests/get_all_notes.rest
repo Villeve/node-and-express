@@ -1,14 +1,14 @@
-GET https://powerful-fjord-13341.herokuapp.com/api/persons/123aodkaw2
-//DELETE https://powerful-fjord-13341.herokuapp.com/api/persons/5d80ac10d3440035ae5babbd
+//GET http://localhost:3001/api/persons/5d80dcef974a9650cb42f792
+DELETE http://localhost:3001/api/persons/5d80df5726be2400045a8c91
  
  //GET http://localhost:3001/info
 
 
- POST http://localhost:3001/api/persons
+ POST http://localhost:3001/api/persons/12
  Content-Type: application/json
 
  {
-     "name": "AB",
+     "name": "ABCD",
     "number": "321"
  }
  
