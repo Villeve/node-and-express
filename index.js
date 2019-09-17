@@ -19,21 +19,6 @@ app.use(assignId)
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 
-
-/*
-const url =
- `mongodb+srv://fullstack:asd@cluster0-hvsqc.mongodb.net/phonebook-app?retryWrites=true&w=majority`
-*/
- /*
- mongoose.connect(url, { useNewUrlParser: true })
-
- const personSchema = new mongoose.Schema({
-     name: String,
-     number: String
- })
-
- const Person = mongoose.model('Person', personSchema)
-*/
 app.get('/', (req, res) => {
   res.send()
 })
@@ -44,14 +29,12 @@ function assignId (req, res, next) {
   next()
 }
 
-app.get('/api/persons/', (req, res) => {
+app.get('/api/persons/', (req, res, next) => {
   Person.find({}).then(result => {
     res.json(result)
   })
+  .catch(error => next(error))
 })
-
-
-
 
 app.get('/info', (req, res) => {
   const currentDate = new Date().toLocaleString()
@@ -70,6 +53,12 @@ app.get('/api/persons/:id', (req, res, next) => {
   })
   .catch(error => next(error))
 })
+
+
+
+
+
+
 
 app.post('/api/persons', (req, res) => {
   
@@ -107,9 +96,33 @@ app.post('/api/persons', (req, res) => {
   }
 })
 
-// Error handling
+app.delete('/api/persons/:id', (req, res, next) => {
+  console.log('Starting removal process')
+  console.log('using id', req.params.id)
+  Person.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+  console.log('XXX',body)
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+  console.log('XXXXXXXXXXXXXXXXXXXXXX',person)
+  Person.findByIdAndUpdate(request.params.id, person, { new: true})
+    .then(updatedPerson => {
+      response.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
+})
+
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+  return response.status(404).send({ error: 'unknown endpoint' })
 }
 app.use(unknownEndpoint)
 
@@ -123,18 +136,6 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 app.use(errorHandler)
-
-
-app.delete('/api/persons/:id', (req, res, next) => {
-  console.log('Starting removal process')
-  console.log('using id', req.params.id)
-  Person.findByIdAndRemove(req.params.id)
-    .then(result => {
-      res.status(204).end()
-    })
-    .catch(error => next(error))
-})
-app.use(unknownEndpoint)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
