@@ -10,7 +10,8 @@
     "build:ui": "rm -rf build && cd ../puhelinluettelo && npm run build --prod && cp -r build ../node-and-express/",
     "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint": "./node_modules/.bin/eslint ."
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "node-uuid": "^1.4.8"
   },
   "devDependencies": {
+    "eslint": "^6.4.0",
     "nodemon": "^1.19.2"
   }
 }

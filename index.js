@@ -1,11 +1,9 @@
-// EI TEHTY 3.18
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const uuid = require('node-uuid')
 const cors = require('cors')
-//const mongoose = require('mongoose')
 const Person = require('./models/person')
 
 morgan.token('body', function getId(req) {
@@ -26,7 +24,6 @@ app.get('/', (req, res) => {
 
 function assignId (req, res, next) {
   req.id = uuid.v4()
-  //console.log('POST request data:', req.body)
   next()
 }
 
@@ -34,7 +31,7 @@ app.get('/api/persons/', (req, res, next) => {
   Person.find({}).then(result => {
     res.json(result)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/info', (req, res) => {
@@ -52,17 +49,11 @@ app.get('/api/persons/:id', (req, res, next) => {
       else res.status(404).end()
     })
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
-
-
-
-
-
-
 app.post('/api/persons', (req, res, next) => {
-  
+
   console.log('req body', req.body.name, req.body.number)
   const personToAdd = new Person({
     name: req.body.name,
@@ -74,35 +65,6 @@ app.post('/api/persons', (req, res, next) => {
       res.json(savedPerson.toJSON())
     })
     .catch(error => next(error))
-  //res.json(personToAdd)
-  /*
-  if(personToAdd.name === '' || personToAdd.number === '') {
-    return res.status(400).json({
-      error: 'Fill both name and number field'
-    })
-  }
-  else {
-    Person.find({}).then(result => {
-      let counter = 0
-      result.forEach(result2 => {
-        counter++
-        if(result2.name === personToAdd.name) {
-          console.log('HIT')
-          counter--
-          return res.status(400).json({
-            error: 'Name must be unique'
-          })
-        }
-        if(counter === result.length) {
-          console.log('SAVED')
-          personToAdd.save()
-          res.json(personToAdd)
-        }
-      })
-    })
-    .catch(error => next(error))
-  }
-  */
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -117,13 +79,11 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
-  console.log('XXX',body)
   const person = {
     name: body.name,
     number: body.number,
   }
-  console.log('XXXXXXXXXXXXXXXXXXXXXX',person)
-  Person.findByIdAndUpdate(request.params.id, person, { new: true})
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
     .then(updatedPerson => {
       response.json(updatedPerson.toJSON())
     })
@@ -136,8 +96,6 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
   if(error.name === 'CastError' && error.kind == 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
   }
