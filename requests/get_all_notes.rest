@@ -1,14 +1,14 @@
-//GET http://localhost:3001/api/persons/5d80dcef974a9650cb42f792
-DELETE http://localhost:3001/api/persons/5d80df5726be2400045a8c91
+//GET https://powerful-fjord-13341.herokuapp.com/api/persons/5d7e55267833932fccacaec2
+//DELETE http://localhost:3001/api/persons/5d80f8f2693b4d0004a04754adwad
  
  //GET http://localhost:3001/info
 
 
- POST http://localhost:3001/api/persons/12
+ POST http://localhost:3001/api/persons/
  Content-Type: application/json
 
  {
-     "name": "ABCD",
-    "number": "321"
+     "name": "Dwayne Wade",
+    "number": "124"
  }
  
